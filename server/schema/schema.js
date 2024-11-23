@@ -1,5 +1,3 @@
-const { projects, clients } = require('../sampleData.js');
-
 const { Project } = require('../models/project.js');
 const { Client } = require('../models/clients.js');
 
