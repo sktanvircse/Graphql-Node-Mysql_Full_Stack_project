@@ -125,7 +125,7 @@ const Mutations = new GraphQLObjectType({
                 },
                 clientId: { type: GraphQLNonNull(GraphQLID) }
             },
-            resolve(parent , args){
+            resolve(parent, args) {
                 const project = new Project({
                     name: args.name,
                     description: args.description,
@@ -134,6 +134,62 @@ const Mutations = new GraphQLObjectType({
                 });
                 return project.save();
             },
+        },
+        //Delete Project 
+        deleteProject: {
+            type: ProjectType,
+            args: {
+                id: { type: GraphQLNonNull(GraphQLID) },
+            },
+            resolve(parent, args) {
+                const project = new Project({
+                    id: args.id,
+                });
+                return project.destroy();
+            }
+        },
+        //Update Project
+        updateProject: {
+            type: ProjectType,
+            args: {
+                id: { type: GraphQLNonNull(GraphQLID) },
+                name: { type: GraphQLString },
+                description: { type: GraphQLString },
+                status: {
+                    type: new GraphQLEnumType({
+                        name: 'ProjectStatusUpdate',
+                        values: {
+                            'Not_Started': { value: 'Not_Started' },
+                            'In_Progress': { value: 'In_Progress' },
+                            'Completed': { value: 'Completed' },
+                        }
+                    }),
+                },
+                clientId: { type: GraphQLID }
+            },
+            resolve(parent, args) {
+                return Client.findByPk(args.clientId)  // Check if client exists
+                    .then((client) => {
+                        if (!client) {
+                            throw new Error('Client does not exist');
+                        }
+                        return Project.findByPk(args.id)
+                            .then((project) => {
+                                if (!project) {
+                                    throw new Error('Project not found');
+                                }
+                                return project.update({
+                                    name: args.name,
+                                    description: args.description,
+                                    status: args.status,
+                                    clientId: args.clientId,
+                                });
+                            });
+                    })
+                    .catch((error) => {
+                        throw new Error(error.message);
+                    });
+            }
         },
     },
 });
