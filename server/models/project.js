@@ -18,8 +18,8 @@ const Project = sequelize.define('Project', {
   },
   status: {
     type: DataTypes.ENUM,
-    values: ['Not Started', 'In Progress', 'Completed'],  // Three possible statuses
-    defaultValue: 'Not Started',  // Default value
+    values: ['Not_Started', 'In_Progress', 'Completed'],  // Three possible statuses
+    defaultValue: 'Not_Started',  // Default value
   },
   clientId: {
     type: DataTypes.INTEGER,
