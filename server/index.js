@@ -1,22 +1,33 @@
 const express = require('express');
-const mysql = require('mysql');
 const cors = require('cors');
 const { graphqlHTTP } = require('express-graphql');
-require('dotenv').config();
-const schema = require('./schema/schema')
+const colors = require('colors');
+const schema = require('./schema/schema');
+const { connectDB } = require('./config/db'); // Import connectDB from the config
+const { syncClientTable } = require('./models/clients');
+const { syncProjectTable } = require('./models/project');
 const PORT = process.env.PORT || 5000;
 
 const app = express();
-// app.use(cors());
+app.use(cors());
 
+//Create Table Client
+// syncClientTable();
+
+//Create Table Project
+// syncProjectTable();
+
+// Connect to the database
+connectDB();  // Connect to MySQL using Sequelize
+
+// Setup GraphQL endpoint
 app.use('/graphql', graphqlHTTP({
     schema,
-    graphiql: process.env.NODE_ENV === 'development'
-}))
+    graphiql: process.env.NODE_ENV === 'development',
+}));
 
-
-
-
+// Start the Express server
 app.listen(PORT, () => {
-    console.log("listen")
-})
+    console.log(`Server is running on port ${PORT}...`.green);
+    console.log("Database connection established.".blue);  // Log when the DB connection is established
+});

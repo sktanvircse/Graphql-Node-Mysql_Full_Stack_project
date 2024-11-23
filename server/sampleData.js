@@ -1,5 +1,5 @@
 //project 
-const project = [
+const projects = [
     {
         id: "1",
         clientId: '1',
@@ -46,4 +46,4 @@ const clients = [
     },
 ]
 
-module.exports = { project, clients };
+module.exports = { projects, clients };
